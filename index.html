@@ -137,11 +137,21 @@
             border-left: 4px solid var(--primary-color);
             margin-bottom: 10px;
             transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .list-group-item:hover {
             background-color: #f8f9fa;
             transform: translateX(5px);
+        }
+
+        .list-group-item-action {
+            text-align: left;
+        }
+
+        #videoPlayer iframe {
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
         .footer {
@@ -231,6 +241,18 @@
             </div>
         </div>
 
+        <!-- Reproductor de Música -->
+        <div class="card fade-in">
+            <div class="card-header">
+                <i class="fas fa-play-circle"></i> Reproductor de Los Vasques
+            </div>
+            <div class="card-body">
+                <div id="videoPlayer" class="text-center mb-4">
+                    <p class="text-muted">Selecciona una canción para reproducir</p>
+                </div>
+            </div>
+        </div>
+
         <!-- Playlist de Canciones -->
         <div class="card fade-in">
             <div class="card-header">
@@ -238,15 +260,18 @@
             </div>
             <div class="card-body">
                 <div id="songsList" class="list-group">
-                    <div class="list-group-item">
-                        <i class="fas fa-music text-danger"></i> <strong>Canción 1</strong> - Un clásico que siempre me emociona
-                    </div>
-                    <div class="list-group-item">
-                        <i class="fas fa-music text-danger"></i> <strong>Canción 2</strong> - Perfecta para cualquier momento
-                    </div>
-                    <div class="list-group-item">
-                        <i class="fas fa-music text-danger"></i> <strong>Canción 3</strong> - Mi favorita absoluta
-                    </div>
+                    <button class="list-group-item list-group-item-action" onclick="playSong('ZxZr8FeGEKM')">
+                        <i class="fas fa-play text-danger"></i> <strong>Tócame</strong> - Los Vasques
+                    </button>
+                    <button class="list-group-item list-group-item-action" onclick="playSong('l8S2N-Aq7_I')">
+                        <i class="fas fa-play text-danger"></i> <strong>Muriendo Lento</strong> - Los Vasques
+                    </button>
+                    <button class="list-group-item list-group-item-action" onclick="playSong('K9C0QxLQDKU')">
+                        <i class="fas fa-play text-danger"></i> <strong>Solo Tú</strong> - Los Vasques
+                    </button>
+                    <button class="list-group-item list-group-item-action" onclick="playSong('vL0RoWxgqV0')">
+                        <i class="fas fa-play text-danger"></i> <strong>Dejarte Ir</strong> - Los Vasques
+                    </button>
                 </div>
             </div>
         </div>
@@ -260,16 +285,33 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
     <script>
+        let currentPlayer = null;
+
+        function playSong(videoId) {
+            const playerDiv = document.getElementById('videoPlayer');
+            playerDiv.innerHTML = `
+                <iframe width="100%" height="400" 
+                    src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            `;
+            
+            // Scroll suave al reproductor
+            playerDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
         function playMusic() {
-            alert('🎵 ¡Reproduciendo música de Los Vasques! 🎸\n\n¡La mejor banda chilena sonando ahora!');
+            playSong('ZxZr8FeGEKM'); // Reproduce la primera canción
         }
 
         function showFavorites() {
             const favorites = [
-                '🎵 Todas las canciones de Los Vasques son increíbles',
-                '❤️ Su estilo único me encanta',
-                '🎸 Cada concierto es una experiencia inolvidable',
-                '🇨🇱 Orgullosa de la música chilena'
+                '🎵 Tócame - Un clásico inolvidable',
+                '❤️ Muriendo Lento - Llega al corazón',
+                '🎸 Solo Tú - Mi canción favorita',
+                '🇨🇱 Orgullosa de Los Vasques'
             ];
             alert(favorites.join('\n'));
         }
@@ -289,12 +331,10 @@
         const songItems = document.querySelectorAll('#songsList .list-group-item');
         songItems.forEach(item => {
             item.addEventListener('click', function() {
-                this.style.backgroundColor = '#f39c12';
-                this.style.color = 'white';
-                setTimeout(() => {
-                    this.style.backgroundColor = '';
-                    this.style.color = '';
-                }, 300);
+                // Remover selección previa
+                songItems.forEach(i => i.classList.remove('active'));
+                // Marcar como seleccionada
+                this.classList.add('active');
             });
         });
     </script>
